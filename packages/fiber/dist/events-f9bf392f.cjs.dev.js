@@ -1,11 +1,36 @@
-import * as React from 'react';
-import React__default from 'react';
-import * as THREE from 'three';
-import { createWithEqualityFn } from 'zustand/traditional';
-import { suspend, preload, clear } from 'suspend-react';
-import Tb, { unstable_scheduleCallback, unstable_IdlePriority } from 'scheduler';
-import { jsx, Fragment } from 'react/jsx-runtime';
-import { useFiber, useContextBridge, traverseFiber } from 'its-fine';
+'use strict';
+
+var React = require('react');
+var THREE = require('three');
+var traditional = require('zustand/traditional');
+var suspendReact = require('suspend-react');
+var Tb = require('scheduler');
+var jsxRuntime = require('react/jsx-runtime');
+var itsFine = require('its-fine');
+
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
+
+function _interopNamespace(e) {
+  if (e && e.__esModule) return e;
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () { return e[k]; }
+        });
+      }
+    });
+  }
+  n["default"] = e;
+  return Object.freeze(n);
+}
+
+var React__namespace = /*#__PURE__*/_interopNamespace(React);
+var THREE__namespace = /*#__PURE__*/_interopNamespace(THREE);
+var Tb__default = /*#__PURE__*/_interopDefault(Tb);
 
 var threeTypes = /*#__PURE__*/Object.freeze({
   __proto__: null
@@ -25,7 +50,7 @@ function findInitialRoot(instance) {
  */
 // Reference with computed key to break Webpack static analysis
 // https://github.com/webpack/webpack/issues/14814
-const act = React['act' + ''];
+const act = React__namespace['act' + ''];
 const isOrthographicCamera = def => def && def.isOrthographicCamera;
 const isRef = obj => obj && obj.hasOwnProperty('current');
 const isColorRepresentation = value => value != null && (typeof value === 'string' || typeof value === 'number' || value.isColor);
@@ -39,9 +64,9 @@ const isColorRepresentation = value => value != null && (typeof value === 'strin
  *
  * @see https://github.com/facebook/react/issues/14927
  */
-const useIsomorphicLayoutEffect = /* @__PURE__ */((_window$document, _window$navigator) => typeof window !== 'undefined' && (((_window$document = window.document) == null ? void 0 : _window$document.createElement) || ((_window$navigator = window.navigator) == null ? void 0 : _window$navigator.product) === 'ReactNative'))() ? React.useLayoutEffect : React.useEffect;
+const useIsomorphicLayoutEffect = /* @__PURE__ */((_window$document, _window$navigator) => typeof window !== 'undefined' && (((_window$document = window.document) == null ? void 0 : _window$document.createElement) || ((_window$navigator = window.navigator) == null ? void 0 : _window$navigator.product) === 'ReactNative'))() ? React__namespace.useLayoutEffect : React__namespace.useEffect;
 function useMutableCallback(fn) {
-  const ref = React.useRef(fn);
+  const ref = React__namespace.useRef(fn);
   useIsomorphicLayoutEffect(() => void (ref.current = fn), [fn]);
   return ref;
 }
@@ -49,15 +74,15 @@ function useMutableCallback(fn) {
  * Bridges renderer Context and StrictMode from a primary renderer.
  */
 function useBridge() {
-  const fiber = useFiber();
-  const ContextBridge = useContextBridge();
-  return React.useMemo(() => ({
+  const fiber = itsFine.useFiber();
+  const ContextBridge = itsFine.useContextBridge();
+  return React__namespace.useMemo(() => ({
     children
   }) => {
-    const strict = !!traverseFiber(fiber, true, node => node.type === React.StrictMode);
-    const Root = strict ? React.StrictMode : React.Fragment;
-    return /*#__PURE__*/jsx(Root, {
-      children: /*#__PURE__*/jsx(ContextBridge, {
+    const strict = !!itsFine.traverseFiber(fiber, true, node => node.type === React__namespace.StrictMode);
+    const Root = strict ? React__namespace.StrictMode : React__namespace.Fragment;
+    return /*#__PURE__*/jsxRuntime.jsx(Root, {
+      children: /*#__PURE__*/jsxRuntime.jsx(ContextBridge, {
         children: children
       })
     });
@@ -74,7 +99,7 @@ function Block({
 }
 
 // NOTE: static members get down-level transpiled to mutations which break tree-shaking
-const ErrorBoundary = /* @__PURE__ */(_ErrorBoundary => (_ErrorBoundary = class ErrorBoundary extends React.Component {
+const ErrorBoundary = /* @__PURE__ */(_ErrorBoundary => (_ErrorBoundary = class ErrorBoundary extends React__namespace.Component {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -402,11 +427,11 @@ function applyProps(object, props) {
     }
 
     // Layers must be written to the mask property
-    if (target instanceof THREE.Layers && value instanceof THREE.Layers) {
+    if (target instanceof THREE__namespace.Layers && value instanceof THREE__namespace.Layers) {
       target.mask = value.mask;
     }
     // Set colors if valid color representation for automatic conversion (copy)
-    else if (target instanceof THREE.Color && isColorRepresentation(value)) {
+    else if (target instanceof THREE__namespace.Color && isColorRepresentation(value)) {
       target.set(value);
     }
     // Copy if properties match signatures and implement math interface (likely read-only)
@@ -434,9 +459,9 @@ function applyProps(object, props) {
       // https://github.com/mrdoob/three.js/pull/25857
       if (rootState && !rootState.linear && colorMaps.includes(key) && (_root$key = root[key]) != null && _root$key.isTexture &&
       // sRGB textures must be RGBA8 since r137 https://github.com/mrdoob/three.js/pull/23129
-      root[key].format === THREE.RGBAFormat && root[key].type === THREE.UnsignedByteType) {
+      root[key].format === THREE__namespace.RGBAFormat && root[key].type === THREE__namespace.UnsignedByteType) {
         // NOTE: this cannot be set from the renderer (e.g. sRGB source textures rendered to P3)
-        root[key].colorSpace = THREE.SRGBColorSpace;
+        root[key].colorSpace = THREE__namespace.SRGBColorSpace;
       }
     }
   }
@@ -647,7 +672,7 @@ function createEvents(store) {
             camera,
             internal
           } = state;
-          const unprojectedPoint = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
+          const unprojectedPoint = new THREE__namespace.Vector3(pointer.x, pointer.y, 0).unproject(camera);
           const hasPointerCapture = id => {
             var _internal$capturedMap, _internal$capturedMap2;
             return (_internal$capturedMap = (_internal$capturedMap2 = internal.capturedMap.get(id)) == null ? void 0 : _internal$capturedMap2.has(hit.eventObject)) != null ? _internal$capturedMap : false;
@@ -900,12 +925,12 @@ function createEvents(store) {
 }
 
 const isRenderer = def => !!(def != null && def.render);
-const context = /* @__PURE__ */React.createContext(null);
+const context = /* @__PURE__ */React__namespace.createContext(null);
 const createStore = (invalidate, advance) => {
-  const rootStore = createWithEqualityFn((set, get) => {
-    const position = new THREE.Vector3();
-    const defaultTarget = new THREE.Vector3();
-    const tempTarget = new THREE.Vector3();
+  const rootStore = traditional.createWithEqualityFn((set, get) => {
+    const position = new THREE__namespace.Vector3();
+    const defaultTarget = new THREE__namespace.Vector3();
+    const tempTarget = new THREE__namespace.Vector3();
     function getCurrentViewport(camera = get().camera, target = defaultTarget, size = get().size) {
       const {
         width,
@@ -948,7 +973,7 @@ const createStore = (invalidate, advance) => {
         current
       }
     }));
-    const pointer = new THREE.Vector2();
+    const pointer = new THREE__namespace.Vector2();
     const rootState = {
       set,
       get,
@@ -969,7 +994,7 @@ const createStore = (invalidate, advance) => {
       linear: false,
       flat: false,
       controls: null,
-      clock: new THREE.Clock(),
+      clock: new THREE__namespace.Clock(),
       pointer,
       mouse: pointer,
       frameloop: 'always',
@@ -1067,7 +1092,7 @@ const createStore = (invalidate, advance) => {
         initialClick: [0, 0],
         initialHits: [],
         capturedMap: new Map(),
-        lastEvent: /*#__PURE__*/React.createRef(),
+        lastEvent: /*#__PURE__*/React__namespace.createRef(),
         // Updates
         active: false,
         frames: 0,
@@ -1153,8 +1178,8 @@ const createStore = (invalidate, advance) => {
  * **Note**: this is an escape hatch to react-internal fields. Expect this to change significantly between versions.
  */
 function useInstanceHandle(ref) {
-  const instance = React.useRef(null);
-  React.useImperativeHandle(instance, () => ref.current.__r3f, [ref]);
+  const instance = React__namespace.useRef(null);
+  React__namespace.useImperativeHandle(instance, () => ref.current.__r3f, [ref]);
   return instance;
 }
 
@@ -1163,7 +1188,7 @@ function useInstanceHandle(ref) {
  * @see https://docs.pmnd.rs/react-three-fiber/api/hooks#usestore
  */
 function useStore() {
-  const store = React.useContext(context);
+  const store = React__namespace.useContext(context);
   if (!store) throw new Error('R3F: Hooks can only be used within the Canvas component!');
   return store;
 }
@@ -1196,7 +1221,7 @@ function useFrame(callback, renderPriority = 0) {
  * @see https://docs.pmnd.rs/react-three-fiber/api/hooks#usegraph
  */
 function useGraph(object) {
-  return React.useMemo(() => buildGraph(object), [object]);
+  return React__namespace.useMemo(() => buildGraph(object), [object]);
 }
 const memoizedLoaders = new WeakMap();
 const isConstructor$1 = value => {
@@ -1238,7 +1263,7 @@ function loadingFn(extensions, onProgress) {
 function useLoader(loader, input, extensions, onProgress) {
   // Use suspense to load async assets
   const keys = Array.isArray(input) ? input : [input];
-  const results = suspend(loadingFn(extensions, onProgress), [loader, ...keys], {
+  const results = suspendReact.suspend(loadingFn(extensions, onProgress), [loader, ...keys], {
     equal: is.equ
   });
   // Return the object(s)
@@ -1250,7 +1275,7 @@ function useLoader(loader, input, extensions, onProgress) {
  */
 useLoader.preload = function (loader, input, extensions) {
   const keys = Array.isArray(input) ? input : [input];
-  return preload(loadingFn(extensions), [loader, ...keys]);
+  return suspendReact.preload(loadingFn(extensions), [loader, ...keys]);
 };
 
 /**
@@ -1258,7 +1283,7 @@ useLoader.preload = function (loader, input, extensions) {
  */
 useLoader.clear = function (loader, input) {
   const keys = Array.isArray(input) ? input : [input];
-  return clear([loader, ...keys]);
+  return suspendReact.clear([loader, ...keys]);
 };
 
 /**
@@ -5923,8 +5948,8 @@ Error generating stack: ` + l.message + `
         Sf(t, r), (t = t.alternate) && Sf(t, r);
       }
       var ie = {},
-        Fm = React__default,
-        tt = Tb,
+        Fm = React__namespace["default"],
+        tt = Tb__default["default"],
         Lt = Object.assign,
         hc = Symbol.for("react.element"),
         zs = Symbol.for("react.transitional.element"),
@@ -13180,8 +13205,8 @@ Check the render method of %s.`, G(di) || "Unknown")), i = zo(n), i.payload = {
         return di;
       }
       var le = {},
-        qm = React__default,
-        St = Tb,
+        qm = React__namespace["default"],
+        St = Tb__default["default"],
         ze = Object.assign,
         Uh = Symbol.for("react.element"),
         Ho = Symbol.for("react.transitional.element"),
@@ -15143,7 +15168,7 @@ function disposeOnIdle(object) {
     // In a testing environment, cleanup immediately
     if (typeof IS_REACT_ACT_ENVIRONMENT !== 'undefined') handleDispose();
     // Otherwise, using a real GPU so schedule cleanup to prevent stalls
-    else unstable_scheduleCallback(unstable_IdlePriority, handleDispose);
+    else Tb.unstable_scheduleCallback(Tb.unstable_IdlePriority, handleDispose);
   }
 }
 function removeChild(parent, child, dispose) {
@@ -15372,7 +15397,7 @@ const reconciler = /* @__PURE__ */createReconciler({
   NotPendingTransition: null,
   // The reconciler types use the internal ReactContext with all the hidden properties
   // so we have to cast from the public React.Context type
-  HostTransitionContext: /* @__PURE__ */React.createContext(null),
+  HostTransitionContext: /* @__PURE__ */React__namespace.createContext(null),
   setCurrentUpdatePriority(newPriority) {
     currentUpdatePriority = newPriority;
   },
@@ -15584,7 +15609,7 @@ function createRoot(canvas) {
         if (isRenderer(customRenderer)) {
           gl = customRenderer;
         } else {
-          gl = new THREE.WebGLRenderer({
+          gl = new THREE__namespace.WebGLRenderer({
             ...defaultProps,
             ...glConfig
           });
@@ -15597,7 +15622,7 @@ function createRoot(canvas) {
       // Set up raycaster (one time only!)
       let raycaster = state.raycaster;
       if (!raycaster) state.set({
-        raycaster: raycaster = new THREE.Raycaster()
+        raycaster: raycaster = new THREE__namespace.Raycaster()
       });
 
       // Set raycaster options
@@ -15619,7 +15644,7 @@ function createRoot(canvas) {
       if (!state.camera || state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose)) {
         lastCamera = cameraOptions;
         const isCamera = cameraOptions == null ? void 0 : cameraOptions.isCamera;
-        const camera = isCamera ? cameraOptions : orthographic ? new THREE.OrthographicCamera(0, 0, 0, 0, 0.1, 1000) : new THREE.PerspectiveCamera(75, 0, 0.1, 1000);
+        const camera = isCamera ? cameraOptions : orthographic ? new THREE__namespace.OrthographicCamera(0, 0, 0, 0, 0.1, 1000) : new THREE__namespace.PerspectiveCamera(75, 0, 0.1, 1000);
         if (!isCamera) {
           camera.position.z = 5;
           if (cameraOptions) {
@@ -15652,7 +15677,7 @@ function createRoot(canvas) {
           scene = sceneOptions;
           prepare(scene, store, '', {});
         } else {
-          scene = new THREE.Scene();
+          scene = new THREE__namespace.Scene();
           prepare(scene, store, '', {});
           if (sceneOptions) applyProps(scene, sceneOptions);
         }
@@ -15733,27 +15758,27 @@ function createRoot(canvas) {
         const oldType = gl.shadowMap.type;
         gl.shadowMap.enabled = !!shadows;
         if (is.boo(shadows)) {
-          gl.shadowMap.type = THREE.PCFSoftShadowMap;
+          gl.shadowMap.type = THREE__namespace.PCFSoftShadowMap;
         } else if (is.str(shadows)) {
           var _types$shadows;
           const types = {
-            basic: THREE.BasicShadowMap,
-            percentage: THREE.PCFShadowMap,
-            soft: THREE.PCFSoftShadowMap,
-            variance: THREE.VSMShadowMap
+            basic: THREE__namespace.BasicShadowMap,
+            percentage: THREE__namespace.PCFShadowMap,
+            soft: THREE__namespace.PCFSoftShadowMap,
+            variance: THREE__namespace.VSMShadowMap
           };
-          gl.shadowMap.type = (_types$shadows = types[shadows]) != null ? _types$shadows : THREE.PCFSoftShadowMap;
+          gl.shadowMap.type = (_types$shadows = types[shadows]) != null ? _types$shadows : THREE__namespace.PCFSoftShadowMap;
         } else if (is.obj(shadows)) {
           Object.assign(gl.shadowMap, shadows);
         }
         if (oldEnabled !== gl.shadowMap.enabled || oldType !== gl.shadowMap.type) gl.shadowMap.needsUpdate = true;
       }
-      THREE.ColorManagement.enabled = !legacy;
+      THREE__namespace.ColorManagement.enabled = !legacy;
 
       // Set color space and tonemapping preferences
       if (!configured) {
-        gl.outputColorSpace = linear ? THREE.LinearSRGBColorSpace : THREE.SRGBColorSpace;
-        gl.toneMapping = flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+        gl.outputColorSpace = linear ? THREE__namespace.LinearSRGBColorSpace : THREE__namespace.SRGBColorSpace;
+        gl.toneMapping = flat ? THREE__namespace.NoToneMapping : THREE__namespace.ACESFilmicToneMapping;
       }
 
       // Update color management state
@@ -15780,7 +15805,7 @@ function createRoot(canvas) {
       // The root has to be configured before it can be rendered
       if (!configured && !pending) this.configure();
       pending.then(() => {
-        reconciler.updateContainer( /*#__PURE__*/jsx(Provider, {
+        reconciler.updateContainer( /*#__PURE__*/jsxRuntime.jsx(Provider, {
           store: store,
           children: children,
           onCreated: onCreated,
@@ -15816,7 +15841,7 @@ function Provider({
     if (!store.getState().events.connected) state.events.connect == null ? void 0 : state.events.connect(rootElement);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return /*#__PURE__*/jsx(context.Provider, {
+  return /*#__PURE__*/jsxRuntime.jsx(context.Provider, {
     value: store,
     children: children
   });
@@ -15848,7 +15873,7 @@ function unmountComponentAtNode(canvas, callback) {
   }
 }
 function createPortal(children, container, state) {
-  return /*#__PURE__*/jsx(Portal, {
+  return /*#__PURE__*/jsxRuntime.jsx(Portal, {
     children: children,
     container: container,
     state: state
@@ -15870,14 +15895,14 @@ function Portal({
     ...rest
   } = state;
   const previousRoot = useStore();
-  const [raycaster] = React.useState(() => new THREE.Raycaster());
-  const [pointer] = React.useState(() => new THREE.Vector2());
+  const [raycaster] = React__namespace.useState(() => new THREE__namespace.Raycaster());
+  const [pointer] = React__namespace.useState(() => new THREE__namespace.Vector2());
   const inject = useMutableCallback((rootState, injectState) => {
     let viewport = undefined;
     if (injectState.camera && size) {
       const camera = injectState.camera;
       // Calculate the override viewport, if present
-      viewport = rootState.viewport.getCurrentViewport(camera, new THREE.Vector3(), size);
+      viewport = rootState.viewport.getCurrentViewport(camera, new THREE__namespace.Vector3(), size);
       // Update the portal camera, if it differs from the previous layer
       if (camera !== rootState.camera) updateCamera(camera, size);
     }
@@ -15916,9 +15941,9 @@ function Portal({
       }))
     };
   });
-  const usePortalStore = React.useMemo(() => {
+  const usePortalStore = React__namespace.useMemo(() => {
     // Create a mirrored store, based on the previous root with a few overrides ...
-    const store = createWithEqualityFn((set, get) => ({
+    const store = traditional.createWithEqualityFn((set, get) => ({
       ...rest,
       set,
       get
@@ -15934,8 +15959,8 @@ function Portal({
   return (
     /*#__PURE__*/
     // @ts-ignore, reconciler types are not maintained
-    jsx(Fragment, {
-      children: reconciler.createPortal( /*#__PURE__*/jsx(context.Provider, {
+    jsxRuntime.jsx(jsxRuntime.Fragment, {
+      children: reconciler.createPortal( /*#__PURE__*/jsxRuntime.jsx(context.Provider, {
         value: usePortalStore,
         children: children
       }), usePortalStore, null)
@@ -16048,8 +16073,10 @@ function loop(timestamp) {
 
     // If the frameloop is invalidated, do not run another frame
     if (state.internal.active && (state.frameloop === 'always' || state.internal.frames > 0) && !((_state$gl$xr = state.gl.xr) != null && _state$gl$xr.isPresenting)) {
-      // FPS throttle: skip render if frame arrived too early
-      if (state.maxFrameRate && timestamp - state.internal.lastFrameTimestamp < 1000 / state.maxFrameRate) {
+      // FPS throttle: skip render if frame arrived too early.
+      // Subtract 1ms from the threshold to absorb RAF floating-point jitter
+      // (e.g. 33.31ms vs 33.33ms at the 30fps boundary on a 60hz display).
+      if (state.maxFrameRate && timestamp - state.internal.lastFrameTimestamp < 1000 / state.maxFrameRate - 1) {
         // Keep loop alive but don't render yet
         repeat += state.frameloop === 'always' ? 1 : state.internal.frames;
       } else {
@@ -16199,4 +16226,37 @@ function createPointerEvents(store) {
   };
 }
 
-export { useStore as A, Block as B, useThree as C, useFrame as D, ErrorBoundary as E, useGraph as F, useLoader as G, _roots as _, useMutableCallback as a, useIsomorphicLayoutEffect as b, createRoot as c, unmountComponentAtNode as d, extend as e, createPointerEvents as f, createEvents as g, flushGlobalEffects as h, isRef as i, addEffect as j, addAfterEffect as k, addTail as l, invalidate as m, advance as n, createPortal as o, flushSync as p, context as q, reconciler as r, applyProps as s, threeTypes as t, useBridge as u, getRootState as v, dispose as w, act as x, buildGraph as y, useInstanceHandle as z };
+exports.Block = Block;
+exports.ErrorBoundary = ErrorBoundary;
+exports._roots = _roots;
+exports.act = act;
+exports.addAfterEffect = addAfterEffect;
+exports.addEffect = addEffect;
+exports.addTail = addTail;
+exports.advance = advance;
+exports.applyProps = applyProps;
+exports.buildGraph = buildGraph;
+exports.context = context;
+exports.createEvents = createEvents;
+exports.createPointerEvents = createPointerEvents;
+exports.createPortal = createPortal;
+exports.createRoot = createRoot;
+exports.dispose = dispose;
+exports.extend = extend;
+exports.flushGlobalEffects = flushGlobalEffects;
+exports.flushSync = flushSync;
+exports.getRootState = getRootState;
+exports.invalidate = invalidate;
+exports.isRef = isRef;
+exports.reconciler = reconciler;
+exports.threeTypes = threeTypes;
+exports.unmountComponentAtNode = unmountComponentAtNode;
+exports.useBridge = useBridge;
+exports.useFrame = useFrame;
+exports.useGraph = useGraph;
+exports.useInstanceHandle = useInstanceHandle;
+exports.useIsomorphicLayoutEffect = useIsomorphicLayoutEffect;
+exports.useLoader = useLoader;
+exports.useMutableCallback = useMutableCallback;
+exports.useStore = useStore;
+exports.useThree = useThree;

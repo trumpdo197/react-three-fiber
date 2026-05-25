@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var events = require('./events-4e2e90ac.cjs.prod.js');
+var events = require('./events-c5a60b29.cjs.prod.js');
 var React = require('react');
 var THREE = require('three');
 var useMeasure = require('react-use-measure');

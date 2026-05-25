@@ -7876,8 +7876,10 @@ function loop(timestamp) {
 
     // If the frameloop is invalidated, do not run another frame
     if (state.internal.active && (state.frameloop === 'always' || state.internal.frames > 0) && !((_state$gl$xr = state.gl.xr) != null && _state$gl$xr.isPresenting)) {
-      // FPS throttle: skip render if frame arrived too early
-      if (state.maxFrameRate && timestamp - state.internal.lastFrameTimestamp < 1000 / state.maxFrameRate) {
+      // FPS throttle: skip render if frame arrived too early.
+      // Subtract 1ms from the threshold to absorb RAF floating-point jitter
+      // (e.g. 33.31ms vs 33.33ms at the 30fps boundary on a 60hz display).
+      if (state.maxFrameRate && timestamp - state.internal.lastFrameTimestamp < 1000 / state.maxFrameRate - 1) {
         // Keep loop alive but don't render yet
         repeat += state.frameloop === 'always' ? 1 : state.internal.frames;
       } else {
