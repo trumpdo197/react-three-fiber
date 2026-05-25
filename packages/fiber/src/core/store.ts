@@ -67,6 +67,7 @@ export interface InternalState {
   active: boolean
   priority: number
   frames: number
+  lastFrameTimestamp: number
   subscribe: (callback: React.RefObject<RenderCallback>, priority: number, store: RootStore) => () => void
 }
 
@@ -131,6 +132,10 @@ export interface RootState {
   setDpr: (dpr: Dpr) => void
   /** Shortcut to setting frameloop flags */
   setFrameloop: (frameloop: Frameloop) => void
+  /** Cap the canvas render rate (frames per second). Undefined = uncapped. */
+  maxFrameRate?: number
+  /** Shortcut to update the max frame rate */
+  setMaxFrameRate: (maxFrameRate?: number) => void
   /** When the canvas was clicked but nothing was hit */
   onPointerMissed?: (event: MouseEvent) => void
   /** If this state model is layered (via createPortal) then this contains the previous layer */
@@ -262,6 +267,8 @@ export const createStore = (
         }
         set(() => ({ frameloop }))
       },
+      maxFrameRate: undefined,
+      setMaxFrameRate: (maxFrameRate) => set(() => ({ maxFrameRate })),
       previousRoot: undefined,
       internal: {
         // Events
@@ -276,6 +283,7 @@ export const createStore = (
         // Updates
         active: false,
         frames: 0,
+        lastFrameTimestamp: 0,
         priority: 0,
         subscribe: (ref: React.RefObject<RenderCallback>, priority: number, store: RootStore) => {
           const internal = get().internal

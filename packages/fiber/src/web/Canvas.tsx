@@ -56,6 +56,7 @@ function CanvasImpl({
   scene,
   onPointerMissed,
   onCreated,
+  maxFrameRate,
   ...props
 }: CanvasProps) {
   // Create a known catalogue of Threejs-native elements
@@ -101,6 +102,7 @@ function CanvasImpl({
           performance,
           raycaster,
           camera,
+          maxFrameRate,
           size: containerRect,
           // Pass mutable reference to onPointerMissed so it's free to update
           onPointerMissed: (...args) => handlePointerMissed.current?.(...args),

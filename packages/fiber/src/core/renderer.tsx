@@ -91,6 +91,8 @@ export interface RenderProps<TCanvas extends HTMLCanvasElement | OffscreenCanvas
    * @see https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#on-demand-rendering
    */
   frameloop?: Frameloop
+  /** Cap the canvas render rate in frames per second. Undefined = uncapped (default). */
+  maxFrameRate?: number
   /**
    * R3F performance options for adaptive performance.
    * @see https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#movement-regression
@@ -208,6 +210,7 @@ export function createRoot<TCanvas extends HTMLCanvasElement | OffscreenCanvas>(
         raycaster: raycastOptions,
         camera: cameraOptions,
         onPointerMissed,
+        maxFrameRate,
       } = props
 
       let state = store.getState()
@@ -313,6 +316,8 @@ export function createRoot<TCanvas extends HTMLCanvasElement | OffscreenCanvas>(
       if (dpr && state.viewport.dpr !== calculateDpr(dpr)) state.setDpr(dpr)
       // Check frameloop
       if (state.frameloop !== frameloop) state.setFrameloop(frameloop)
+      // Check maxFrameRate
+      if (state.maxFrameRate !== maxFrameRate) state.setMaxFrameRate(maxFrameRate)
       // Check pointer missed
       if (!state.onPointerMissed) state.set({ onPointerMissed })
       // Check performance

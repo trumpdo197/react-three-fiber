@@ -108,7 +108,14 @@ export function loop(timestamp: number): void {
       (state.frameloop === 'always' || state.internal.frames > 0) &&
       !state.gl.xr?.isPresenting
     ) {
-      repeat += update(timestamp, state)
+      // FPS throttle: skip render if frame arrived too early
+      if (state.maxFrameRate && timestamp - state.internal.lastFrameTimestamp < 1000 / state.maxFrameRate) {
+        // Keep loop alive but don't render yet
+        repeat += state.frameloop === 'always' ? 1 : state.internal.frames
+      } else {
+        state.internal.lastFrameTimestamp = timestamp
+        repeat += update(timestamp, state)
+      }
     }
   }
   useFrameInProgress = false
